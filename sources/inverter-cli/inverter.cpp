@@ -116,7 +116,7 @@ bool cInverter::query(const char *cmd, int replysize) {
     time(&started);
 
     do {
-        n = read(fd, (void*)buf+i, replysize-i);
+        n = read(fd, &buf[i], replysize-i);
         if (n < 0) {
             if (time(NULL) - started > 2) {
                 lprintf("INVERTER: %s read timeout", cmd);
