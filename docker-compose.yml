@@ -19,6 +19,7 @@ services:
 
     volumes:
         - ./config/:/etc/inverter/
+        - /run/user/1000/ramdisk/:/ramdisk/
 
     devices:
     #  - "/dev/mem:/dev/mem"
