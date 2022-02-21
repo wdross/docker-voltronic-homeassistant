@@ -10,6 +10,8 @@ MQTT_USERNAME=`cat /etc/inverter/mqtt.json | jq '.username' -r`
 MQTT_PASSWORD=`cat /etc/inverter/mqtt.json | jq '.password' -r`
 MQTT_CLIENTID=`cat /etc/inverter/mqtt.json | jq '.clientid' -r`
 
+# update to make this a retained message (-r), so it doesn't have to be
+# re-broadcast every so often in the event of a Homeassistant restart
 registerTopic () {
     mosquitto_pub \
         -h $MQTT_SERVER \
@@ -17,6 +19,7 @@ registerTopic () {
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
         -i $MQTT_CLIENTID \
+        -r \
         -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_$1/config" \
         -m "{
   \"name\": \""$MQTT_DEVICENAME"_$1\",
