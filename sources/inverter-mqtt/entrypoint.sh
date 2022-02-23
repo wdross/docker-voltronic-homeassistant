@@ -20,11 +20,19 @@ sleepUntilNextSecs() { # args sec_quantity
     sleep $slp
 }
 
-# wait until the clock lines up on the next integer multiple seconds
-sleepUntilNextSecs 30
-# after which we'll execute exactly every 30 seconds...
+sec=`awk 'BEGIN{FS="="} /^run_interval/{print $2}' /etc/inverter/inverter.conf`
+[ -z "$sec" ] && sec=0
+# Then we'll keep it in a reasonable range: smaller than 15 is unlikely to behave
+# well if the serial unit is unhooked/powered off, as the timeout expression is 10 seconds!
+if (( sec < 15 )); then
+  sec=15
+elif (( sec > 600 )); then
+  sec=600
+fi
+
+# Now we can execute exactly on the specified interval...
 while true
 do
+  sleepUntilNextSecs "$sec"
   /opt/inverter-mqtt/mqtt-push.sh > /dev/null 2>&1
-  sleepUntilNextSecs 30
 done

@@ -236,8 +236,8 @@ int main(int argc, char* argv[]) {
                 pv_input_watts = (scc_voltage * pv_input_current) * wattfactor;
 
                 // Calculate watt-hours generated per run interval period (given as program argument)
-                pv_input_watthour = pv_input_watts / (3600 / runinterval);
-                load_watthour = (float)load_watt / (3600 / runinterval);
+                pv_input_watthour = (float)pv_input_watts * runinterval / 3600.0;
+                load_watthour = (float)load_watt * runinterval / 3600.0;
 
                 // Print as JSON (output is expected to be parsed by another tool...)
                 printf("{\n");
