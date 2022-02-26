@@ -1,4 +1,7 @@
 #!/bin/bash
+# To track the Overall execution time of this shell script
+o=`awk '{ printf("%.0f",$1) }' < /proc/uptime`
+
 INFLUX_ENABLED=`cat /etc/inverter/mqtt.json | jq '.influx.enabled' -r`
 
 # Collect parameters one time for multiple references
@@ -89,6 +92,8 @@ done
 
 # need to have a nice, clean finale to satisfy jq: can't have that
 # dangling comma, so we put a dummy value here and close it up
-printf "\"unused\":1 }" >> /ramdisk/times.txt
+e=`awk '{ printf("%.0f",$1) }' < /proc/uptime`
+let e-=o
+printf "\"Elapsed\":%d }" $e >> /ramdisk/times.txt
 
 echo $INVERTER_DATA > /ramdisk/response.txt # overwrite last data to RAM disk
