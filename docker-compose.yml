@@ -11,15 +11,20 @@ services:
       context: .
       dockerfile: Dockerfile.dev
 
+    environment:
+      TZ: "America/Detroit"
 
     container_name: voltronic-mqtt
 
     privileged: true
     restart: always
 
+    # we'll use the host's network directly, so we can get our total eth RX/TX stats
+    network_mode: host
+
     volumes:
         - ./config/:/etc/inverter/
-        - /run/user/1000/ramdisk/:/ramdisk/
+        - /run/user/1000/:/ramdisk/
 
     devices:
     #  - "/dev/mem:/dev/mem"
