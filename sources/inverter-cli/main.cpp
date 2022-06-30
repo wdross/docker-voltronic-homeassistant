@@ -226,7 +226,7 @@ int main(int argc, char* argv[]) {
                 if (detailDebug) {
                     printf("\"%s\"\n", reply1->c_str());
                     printf("\"%s\"\n", reply2->c_str());
-                    printf("\"%s\"\n", warnings->c_str());
+                    printf("%d \"%s\"\n", mode, warnings->c_str());
                     if(runOnce) {
                       // Do once and exit instead of loop endlessly
                       lprintf("INVERTER: All queries complete, exiting loop.");

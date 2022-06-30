@@ -5,7 +5,10 @@ o=`awk '{ printf("%.0f",$1) }' < /proc/uptime`
 # current readings and what time they are from (to the nearest second)
 tim=`date +%s`
 INVERTER_DATA=`timeout 10 /opt/inverter-cli/bin/inverter_poller -b -1`
+# in case we are emulating our conversation:
 [ -z "$INVERTER_DATA" ] && INVERTER_DATA=`cat /ramdisk/keep.txt`
+# in case there was no answer from the device AND we are not emulating, need to have a 3 line response:
+[ -z "$INVERTER_DATA" ] && INVERTER_DATA=`echo -e '""\n""\n0 ""'`
 
 # We need to get current number of bytes from our host's network interface
 rxb=`cat /sys/class/net/wlan0/statistics/rx_bytes`
