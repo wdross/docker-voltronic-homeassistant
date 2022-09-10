@@ -1,9 +1,14 @@
 #!/bin/bash
 
-PROC=`ps cax | grep -E "mqtt-subscriber|mosquitto_sub|watch" | awk '{print $5}' | sort -u | wc -l`
-
-if [ "$PROC" -eq "3" ] ; then
-    exit 0
+# compute how many seconds its been since this file was touched
+if [ ! -f /ramdisk/wlan0_rx_bytes.txt ]; then
+  exit 99
+fi
+secs=`echo $(( $(date +%s) - $(date -r /ramdisk/wlan0_rx_bytes.txt +%s) ))`
+if (( $secs < 100 )); then
+  # its been under a couple minutes (expect it to cycle every 30s), still OK
+  exit 0
 else
-    exit 99
+  # file isn't recent, we can flag this as a problem which will restart the container
+  exit 99
 fi
