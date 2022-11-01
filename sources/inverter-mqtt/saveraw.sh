@@ -26,10 +26,13 @@ prev=`cat /ramdisk/wlan0_tx_bytes.txt`
 echo "$txb" > /ramdisk/wlan0_tx_bytes.txt
 let txb-=prev
 
+btemp=`cat /ramdisk/buildingtemp`
+[ -z "$btemp" ] && btemp=0 # ensure a zero for math
+
 e=`awk '{ printf("%.0f",$1) }' < /proc/uptime`
 let e-=o
 
 # save off the amount of transmitted bytes, received bytes since last cycle as
 # well as the time (seconds) of the above readings and script elapsed time
 echo "$INVERTER_DATA" >> /ramdisk/response.txt # append to RAM disk
-echo "$txb $rxb $tim $e" >> /ramdisk/response.txt
+echo "$txb $rxb $tim $e $btemp" >> /ramdisk/response.txt
