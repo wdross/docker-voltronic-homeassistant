@@ -162,6 +162,11 @@ int main(int argc, char* argv[]) {
     InputParser cmdArgs(argc, argv);
     const string &rawcmd = cmdArgs.getCmdOption("-r");
 
+    int respsize = 7;
+    if(cmdArgs.cmdOptionExists("-s")) {
+      respsize = stoi(cmdArgs.getCmdOption("-s"));
+    }
+
     if(cmdArgs.cmdOptionExists("-h") || cmdArgs.cmdOptionExists("--help")) {
         return print_help();
     }
@@ -190,7 +195,7 @@ int main(int argc, char* argv[]) {
 
     // Logic to send 'raw commands' to the inverter..
     if (!rawcmd.empty()) {
-        ups->ExecuteCmd(rawcmd);
+        ups->ExecuteCmd(rawcmd,respsize);
         // We're piggybacking off the qpri status response...
         printf("Reply:  %s\n", ups->GetQpiriStatus()->c_str());
         exit(0);

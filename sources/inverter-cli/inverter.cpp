@@ -110,6 +110,7 @@ bool cInverter::query(const char *cmd, int replysize) {
     buf[n++] = crc >> 8;
     buf[n++] = crc & 0xff;
     buf[n++] = 0x0d;
+    buf[n] = 0x0;
 
     //send a command
     write(fd, &buf, n);
@@ -203,9 +204,9 @@ void cInverter::poll() {
     }
 }
 
-void cInverter::ExecuteCmd(const string cmd) {
+void cInverter::ExecuteCmd(const string cmd,int respsize) {
     // Sending any command raw
-    if (query(cmd.data(), 7)) {
+    if (query(cmd.c_str(), respsize)) {
         m.lock();
         strcpy(status2, (const char*)buf+1);
         m.unlock();
